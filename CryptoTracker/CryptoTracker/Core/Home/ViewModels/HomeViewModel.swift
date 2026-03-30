@@ -12,11 +12,20 @@ class HomeViewModel: ObservableObject {
     
     @Published var allCoins: [Coin] = []
     @Published var portfolioCoins: [Coin] = []
+
+    private let coinService = CoinDataService()
     
     init() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.allCoins.append(DeveloperPreview.instance.coin)
-            self?.portfolioCoins.append(DeveloperPreview.instance.coin)
+        getCoins()
+    }
+    
+    private func getCoins() {
+        Task {
+            do {
+                allCoins = try await coinService.getCoins()
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
 }
