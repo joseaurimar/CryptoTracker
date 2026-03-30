@@ -19,6 +19,7 @@ struct CoinRowView: View {
             
             if showHoldingsColumn {
                 centerColumn
+                Spacer()
             }
             
             rightColumn
