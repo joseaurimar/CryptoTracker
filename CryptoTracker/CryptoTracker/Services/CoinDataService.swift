@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 actor CoinDataService {
     
@@ -23,5 +24,19 @@ actor CoinDataService {
         }
         
         return try JSONDecoder().decode([Coin].self, from: data)
+    }
+    
+    func getCoinImage(with url: String) async throws -> UIImage? {
+        guard let url = URL(string: url) else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NetworkingError.badURLResponse(url: url) // Handle non-200 status codes
+        }
+        
+        return UIImage(data: data)
     }
 }
