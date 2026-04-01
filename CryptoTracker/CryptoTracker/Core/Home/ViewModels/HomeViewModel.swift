@@ -13,6 +13,18 @@ class HomeViewModel: ObservableObject {
     @Published var allCoins: [Coin] = []
     @Published var portfolioCoins: [Coin] = []
     @Published var searchText: String = ""
+    
+    var filteredCoins: [Coin] {
+        if searchText.isEmpty {
+            return allCoins
+        } else {
+            return allCoins.filter {
+                let lowercasedText = searchText.lowercased()
+                
+                return $0.name.lowercased().contains(lowercasedText) || $0.symbol.lowercased().contains(lowercasedText)
+            }
+        }
+    }
 
     private let coinService = CoinDataService()
     
