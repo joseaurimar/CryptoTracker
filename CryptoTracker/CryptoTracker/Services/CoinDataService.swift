@@ -26,7 +26,7 @@ actor CoinDataService {
         return try JSONDecoder().decode([Coin].self, from: data)
     }
     
-    func getCoinImage(with url: String) async throws -> UIImage? {
+    func downloadCoinImage(with url: String) async throws -> UIImage? {
         guard let url = URL(string: url) else {
             throw URLError(.badURL)
         }

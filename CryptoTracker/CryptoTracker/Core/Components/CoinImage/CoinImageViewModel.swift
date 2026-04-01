@@ -15,16 +15,30 @@ class CoinImageViewModel: ObservableObject {
     
     private let coin: Coin
     private let coinDataService = CoinDataService()
+    private let fileManager = LocalFileManager.instance
+    private let folderName = "coin_images"
+    private let imageName: String
     
     init(coin: Coin) {
         self.coin = coin
         isLoading = true
+        imageName = coin.id
         getImage(imageURL: coin.image)
     }
     
     private func getImage(imageURL: String) {
+        
         Task {
-            image = try await coinDataService.getCoinImage(with: imageURL)
+            if let localImage = await fileManager.getImage(with: imageName, in: folderName) {
+                image = localImage
+            } else {
+                image = try await coinDataService.downloadCoinImage(with: imageURL)
+                
+                if let downloadedImage = image {
+                    await fileManager.saveImage(image: downloadedImage, imageName: imageName, folderName: folderName)
+                }
+            }
+            
             isLoading = false
         }
     }
