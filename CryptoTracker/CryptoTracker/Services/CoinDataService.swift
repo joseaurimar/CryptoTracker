@@ -39,4 +39,23 @@ actor CoinDataService {
         
         return UIImage(data: data)
     }
+    
+    @MainActor
+    func getMarketData() async throws -> MarketData {
+        guard let url = URL(string: "https://api.coingecko.com/api/v3/global") else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NetworkingError.badURLResponse(url: url) // Handle non-200 status codes
+        }
+        
+        guard let marketData = try JSONDecoder().decode(GlobalData.self, from: data).data else {
+            throw NetworkingError.badDecodeResponse(url: url)
+        }
+        
+        return marketData
+    }
 }
