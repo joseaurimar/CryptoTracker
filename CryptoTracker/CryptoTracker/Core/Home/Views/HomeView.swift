@@ -22,6 +22,9 @@ struct HomeView: View {
             VStack {
                 homeHeader
                 
+                HomeStatisticView(showPortfolio: $showPortfolio)
+                    .frame(height: 50)
+                
                 SearchBarView(searchText: $viewModel.searchText)
                 
                 headerCoinList
