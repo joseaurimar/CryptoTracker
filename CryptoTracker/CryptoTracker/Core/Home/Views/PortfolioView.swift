@@ -6,15 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PortfolioView: View {
     
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var viewModel: HomeViewModel
     
     @State private var selectedCoin: Coin? = nil
     @State private var quantityText: String = ""
     @State private var showCheckmark = false
+    
+    @Query(sort: \Portfolio.coinID) var portfolioCoins: [Portfolio]
     
     @ViewBuilder
     private func roundedRectangleStrokeColorModifier(coin: Coin) -> some View {
@@ -53,6 +57,11 @@ struct PortfolioView: View {
                 // remove liquid class style
                 .sharedBackgroundVisibility(.hidden)
             }
+            .onChange(of: viewModel.searchText) { oldValue, newValue in
+                if newValue.isEmpty {
+                    removedSelectedCoin()
+                }
+            }
         }
     }
 }
@@ -62,13 +71,13 @@ extension PortfolioView {
     private var coinLogoList: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 10) {
-                ForEach(viewModel.allCoins) { coin in
+                ForEach(viewModel.filteredCoins) { coin in
                     CoinLogoView(coin: coin)
                         .frame(width: 75)
                         .padding(4)
                         .onTapGesture {
                             withAnimation(.easeIn) {
-                                selectedCoin = coin
+                                updateSelectedCoin(coin: coin)
                             }
                         }
                         .background(roundedRectangleStrokeColorModifier(coin: coin))
@@ -76,6 +85,16 @@ extension PortfolioView {
             }
             .padding(.vertical, 1)
             .padding(.leading)
+        }
+    }
+    
+    private func updateSelectedCoin(coin: Coin) {
+        selectedCoin = coin
+        
+        if let portfolio = portfolioCoins.first(where: { $0.coinID == coin.id }) {
+            quantityText = "\(portfolio.amount)"
+        } else {
+            quantityText = ""
         }
     }
     
@@ -128,9 +147,22 @@ extension PortfolioView {
     }
     
     private func saveButtonPressed() {
-        guard let coin = selectedCoin else { return }
+        guard let coin = selectedCoin,
+              let amount = Double(quantityText) else {
+            return
+        }
         
-        // save to portfolio
+        // First check if portfolio was added in data base if not add a new coin to portfolio.
+        // If the selected coin is in data base check if the amount value is greater than zero to update the amount and if the amount is zero remove portfolio from data base.
+        if let portfolio = portfolioCoins.first(where: { $0.coinID == coin.id }) {
+            if amount > 0 {
+                portfolio.amount = amount
+            } else {
+                modelContext.delete(portfolio)
+            }
+        } else {
+            modelContext.insert(Portfolio(coinID: coin.id, amount: amount))
+        }
         
         // show checkmark
         withAnimation {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct CryptoTrackerApp: App {
@@ -25,5 +26,6 @@ struct CryptoTrackerApp: App {
             }
             .environmentObject(viewModel)
         }
+        .modelContainer(for: [Portfolio.self])
     }
 }

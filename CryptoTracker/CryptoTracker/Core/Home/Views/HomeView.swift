@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     
     @EnvironmentObject private var viewModel: HomeViewModel
     @State private var showPortfolio = false
     @State private var showPortfolioView = false
+    
+    @Query(sort: \Portfolio.coinID) var portfolioCoins: [Portfolio]
     
     var body: some View {
         ZStack {
@@ -89,9 +92,12 @@ extension HomeView {
     
     private var portfolioCoinsList: some View {
         List {
-            ForEach(viewModel.portfolioCoins) { coin in
-                CoinRowView(coin: coin, showHoldingsColumn: true)
-                    .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+            ForEach(portfolioCoins) { portofolio in
+                if let coin = viewModel.getPortfolioCoin(where: portofolio) {
+                    //let _ = print("COIN ID: \(portofolio.coinID)")
+                    CoinRowView(coin: coin.updateHoldings(amount: portofolio.amount), showHoldingsColumn: true)
+                        .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+                }
             }
         }
         .listStyle(.plain)

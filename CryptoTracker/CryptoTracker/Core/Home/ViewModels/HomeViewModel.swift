@@ -12,7 +12,7 @@ class HomeViewModel: ObservableObject {
     
     @Published var statistics: [Statistic] = []
     @Published var allCoins: [Coin] = []
-    @Published var portfolioCoins: [Coin] = []
+    //@Published var portfolioCoins: [Coin] = []
     @Published var searchText: String = ""
     
     var filteredCoins: [Coin] {
@@ -63,5 +63,9 @@ class HomeViewModel: ObservableObject {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    func getPortfolioCoin(where portfolio: Portfolio) -> Coin? {
+        return allCoins.first(where: { $0.id == portfolio.coinID })
     }
 }
