@@ -6,11 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		38034B802F856C9A00AF8DFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38BF8E082F74610500FAE7DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38BF8E0F2F74610500FAE7DC;
+			remoteInfo = CryptoTracker;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		38034B7C2F856C9A00AF8DFB /* CryptoTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CryptoTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		38BF8E102F74610500FAE7DC /* CryptoTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CryptoTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		38034B7D2F856C9A00AF8DFB /* CryptoTrackerTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CryptoTrackerTests;
+			sourceTree = "<group>";
+		};
 		38BF8E122F74610500FAE7DC /* CryptoTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CryptoTracker;
@@ -19,6 +35,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		38034B792F856C9A00AF8DFB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		38BF8E0D2F74610500FAE7DC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				38BF8E122F74610500FAE7DC /* CryptoTracker */,
+				38034B7D2F856C9A00AF8DFB /* CryptoTrackerTests */,
 				38BF8E112F74610500FAE7DC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				38BF8E102F74610500FAE7DC /* CryptoTracker.app */,
+				38034B7C2F856C9A00AF8DFB /* CryptoTrackerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +73,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		38034B7B2F856C9A00AF8DFB /* CryptoTrackerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38034B822F856C9A00AF8DFB /* Build configuration list for PBXNativeTarget "CryptoTrackerTests" */;
+			buildPhases = (
+				38034B782F856C9A00AF8DFB /* Sources */,
+				38034B792F856C9A00AF8DFB /* Frameworks */,
+				38034B7A2F856C9A00AF8DFB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				38034B812F856C9A00AF8DFB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				38034B7D2F856C9A00AF8DFB /* CryptoTrackerTests */,
+			);
+			name = CryptoTrackerTests;
+			packageProductDependencies = (
+			);
+			productName = CryptoTrackerTests;
+			productReference = 38034B7C2F856C9A00AF8DFB /* CryptoTrackerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		38BF8E0F2F74610500FAE7DC /* CryptoTracker */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 38BF8E1B2F74610600FAE7DC /* Build configuration list for PBXNativeTarget "CryptoTracker" */;
@@ -80,6 +128,10 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					38034B7B2F856C9A00AF8DFB = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 38BF8E0F2F74610500FAE7DC;
+					};
 					38BF8E0F2F74610500FAE7DC = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
@@ -100,11 +152,19 @@
 			projectRoot = "";
 			targets = (
 				38BF8E0F2F74610500FAE7DC /* CryptoTracker */,
+				38034B7B2F856C9A00AF8DFB /* CryptoTrackerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		38034B7A2F856C9A00AF8DFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		38BF8E0E2F74610500FAE7DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +175,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		38034B782F856C9A00AF8DFB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		38BF8E0C2F74610500FAE7DC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +191,55 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		38034B812F856C9A00AF8DFB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38BF8E0F2F74610500FAE7DC /* CryptoTracker */;
+			targetProxy = 38034B802F856C9A00AF8DFB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		38034B832F856C9A00AF8DFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jose.CryptoTrackerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CryptoTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CryptoTracker";
+			};
+			name = Debug;
+		};
+		38034B842F856C9A00AF8DFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jose.CryptoTrackerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CryptoTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CryptoTracker";
+			};
+			name = Release;
+		};
 		38BF8E192F74610600FAE7DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -309,6 +424,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		38034B822F856C9A00AF8DFB /* Build configuration list for PBXNativeTarget "CryptoTrackerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38034B832F856C9A00AF8DFB /* Debug */,
+				38034B842F856C9A00AF8DFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		38BF8E0B2F74610500FAE7DC /* Build configuration list for PBXProject "CryptoTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
