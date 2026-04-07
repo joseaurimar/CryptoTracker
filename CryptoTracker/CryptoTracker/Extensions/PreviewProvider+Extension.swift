@@ -17,7 +17,12 @@ class DeveloperPreview {
     static let instance = DeveloperPreview()
     private init() {}
     
-    let homeViewModel = HomeViewModel()
+    let homeViewModel = HomeViewModel(
+        with: PortfolioDataService(
+            container: SwiftDataContextManager.shared.container,
+            context: SwiftDataContextManager.shared.context
+        )
+    )
     
     let statistic1 = Statistic(title: "Market Cap", value: "R$ 12.5B", percentageChange: 25.34)
     let statistic2 = Statistic(title: "Total Volume", value: "R$ 1.23T")

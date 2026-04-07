@@ -1,2 +1,2 @@
 # CryptoTracker
-SwiftUI + MVVM + Async/Await Crypto App
+SwiftUI + MVVM + Async/Await + SwiftData Crypto App

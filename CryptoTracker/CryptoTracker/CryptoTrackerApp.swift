@@ -11,7 +11,12 @@ import SwiftData
 @main
 struct CryptoTrackerApp: App {
     
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = HomeViewModel(
+        with: PortfolioDataService(
+            container: SwiftDataContextManager.shared.container,
+            context: SwiftDataContextManager.shared.context
+        )
+    )
     
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(Color.theme.accent)]
@@ -26,6 +31,5 @@ struct CryptoTrackerApp: App {
             }
             .environmentObject(viewModel)
         }
-        .modelContainer(for: [Portfolio.self])
     }
 }

@@ -14,8 +14,6 @@ struct HomeView: View {
     @State private var showPortfolio = false
     @State private var showPortfolioView = false
     
-    @Query(sort: \Portfolio.coinID) var portfolioCoins: [Portfolio]
-    
     var body: some View {
         ZStack {
             // Background layer
@@ -92,11 +90,10 @@ extension HomeView {
     
     private var portfolioCoinsList: some View {
         List {
-            ForEach(portfolioCoins) { portofolio in
-                if let coin = viewModel.getPortfolioCoin(where: portofolio) {
-                    //let _ = print("COIN ID: \(portofolio.coinID)")
-                    CoinRowView(coin: coin.updateHoldings(amount: portofolio.amount), showHoldingsColumn: true)
-                        .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+            ForEach(viewModel.portfolioCoins) { coin in
+                if let portfolio = viewModel.getPortfolio(coin: coin) {
+                    CoinRowView(coin: coin.updateHoldings(amount: portfolio.amount), showHoldingsColumn: true)
+                            .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
                 }
             }
         }

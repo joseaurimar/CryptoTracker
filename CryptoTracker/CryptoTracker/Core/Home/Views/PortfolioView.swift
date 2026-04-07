@@ -11,14 +11,11 @@ import SwiftData
 struct PortfolioView: View {
     
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var viewModel: HomeViewModel
     
     @State private var selectedCoin: Coin? = nil
     @State private var quantityText: String = ""
     @State private var showCheckmark = false
-    
-    @Query(sort: \Portfolio.coinID) var portfolioCoins: [Portfolio]
     
     @ViewBuilder
     private func roundedRectangleStrokeColorModifier(coin: Coin) -> some View {
@@ -91,7 +88,7 @@ extension PortfolioView {
     private func updateSelectedCoin(coin: Coin) {
         selectedCoin = coin
         
-        if let portfolio = portfolioCoins.first(where: { $0.coinID == coin.id }) {
+        if let portfolio = viewModel.getPortfolio(coin: coin) {
             quantityText = "\(portfolio.amount)"
         } else {
             quantityText = ""
@@ -152,17 +149,7 @@ extension PortfolioView {
             return
         }
         
-        // First check if portfolio was added in data base if not add a new coin to portfolio.
-        // If the selected coin is in data base check if the amount value is greater than zero to update the amount and if the amount is zero remove portfolio from data base.
-        if let portfolio = portfolioCoins.first(where: { $0.coinID == coin.id }) {
-            if amount > 0 {
-                portfolio.amount = amount
-            } else {
-                modelContext.delete(portfolio)
-            }
-        } else {
-            modelContext.insert(Portfolio(coinID: coin.id, amount: amount))
-        }
+        viewModel.updatePortfolio(coin: coin, amount: amount)
         
         // show checkmark
         withAnimation {
