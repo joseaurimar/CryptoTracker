@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 final class HomeViewModel: ObservableObject {
     
@@ -14,6 +15,7 @@ final class HomeViewModel: ObservableObject {
     @Published var allCoins: [Coin] = []
     @Published var portfolioCoins: [Coin] = []
     @Published var searchText: String = ""
+    @Published var isLoading: Bool = false
     
     private let coinService = CoinDataService()
     private let service: PortfolioDataService
@@ -33,7 +35,10 @@ final class HomeViewModel: ObservableObject {
     init(with service: PortfolioDataService) {
         self.service = service
         
-        fetchMarketData()
+        Task {
+            await fetchMarketData()
+        }
+        
         getCoins()
     }
     
@@ -48,39 +53,51 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    private func fetchMarketData() {
-        Task {
-            do {
-                let marketData = try await coinService.getMarketData()
-                let marketCap = Statistic(
-                    title: "Market Cap",
-                    value: marketData.marketCap,
-                    percentageChange: marketData.marketCapChangePercentage24HUsd
-                )
-                
-                let volume = Statistic(title: "24h Volume", value: marketData.volume)
-                let btcDominance = Statistic(title: "BTC Dominance", value: marketData.btcDominance)
-                
-                let portfolioValue = portfolioCoins.map { $0.currentHoldingsValue }.reduce(0, +)
-                
-                let previousValue = portfolioCoins.map { coin -> Double in
-                    let percentChange = (coin.priceChangePercentage24H ?? 0) / 100
-                    return coin.currentHoldingsValue / (1 + percentChange)
-                }.reduce(0, +)
-                
-                let percentageChange = ((portfolioValue - previousValue) / previousValue) * 100
-                
-                let portfolio = Statistic(
-                    title: "Portfolio Value",
-                    value: portfolioValue.asNumberString(),
-                    percentageChange: percentageChange
-                )
-                
-                statistics.append(contentsOf: [marketCap, volume, btcDominance, portfolio])
-            } catch {
-                print(error.localizedDescription)
-            }
+    private func fetchMarketData() async {
+        do {
+            let marketData = try await coinService.getMarketData()
+            let marketCap = Statistic(
+                title: "Market Cap",
+                value: marketData.marketCap,
+                percentageChange: marketData.marketCapChangePercentage24HUsd
+            )
+            
+            let volume = Statistic(title: "24h Volume", value: marketData.volume)
+            let btcDominance = Statistic(title: "BTC Dominance", value: marketData.btcDominance)
+            
+            let portfolioValue = portfolioCoins.map { $0.currentHoldingsValue }.reduce(0, +)
+            
+            let previousValue = portfolioCoins.map { coin -> Double in
+                let percentChange = (coin.priceChangePercentage24H ?? 0) / 100
+                return coin.currentHoldingsValue / (1 + percentChange)
+            }.reduce(0, +)
+            
+            let percentageChange = ((portfolioValue - previousValue) / previousValue) * 100
+            
+            let portfolio = Statistic(
+                title: "Portfolio Value",
+                value: portfolioValue.asNumberString(),
+                percentageChange: percentageChange
+            )
+            
+            statistics.append(contentsOf: [marketCap, volume, btcDominance, portfolio])
+        } catch {
+            print(error.localizedDescription)
         }
+    }
+    
+    func reloadData() async {
+        isLoading = true
+        
+        do {
+            allCoins = try await coinService.getCoins()
+            await fetchMarketData()
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        isLoading = false
+        HapticManager.notification(type: .success)
     }
     
     // MARK: SwiftData functions
@@ -110,7 +127,7 @@ final class HomeViewModel: ObservableObject {
             }
         }
         
-        fetchMarketData()
+        await fetchMarketData()
         
         return coins
     }

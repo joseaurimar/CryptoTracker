@@ -111,6 +111,17 @@ extension HomeView {
             }
             
             Text("Price")
+            
+            Button {
+                withAnimation(.linear(duration: 2.0)) {
+                    let _ = Task {
+                        await viewModel.reloadData()
+                    }
+                }
+            } label: {
+                Image(systemName: "goforward")
+            }
+            .rotationEffect(Angle(degrees: viewModel.isLoading ? 360 : 0))
         }
         .font(.caption)
         .foregroundStyle(Color.theme.secondaryText)
