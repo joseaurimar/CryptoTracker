@@ -8,12 +8,15 @@
 import Foundation
 import Combine
 
-class HomeViewModel: ObservableObject {
+final class HomeViewModel: ObservableObject {
     
     @Published var statistics: [Statistic] = []
     @Published var allCoins: [Coin] = []
     @Published var portfolioCoins: [Coin] = []
     @Published var searchText: String = ""
+    
+    private let coinService = CoinDataService()
+    private let service: PortfolioDataService
     
     var filteredCoins: [Coin] {
         if searchText.isEmpty {
@@ -26,9 +29,6 @@ class HomeViewModel: ObservableObject {
             }
         }
     }
-
-    private let coinService = CoinDataService()
-    private let service: PortfolioDataService
     
     init(with service: PortfolioDataService) {
         self.service = service
@@ -60,7 +60,21 @@ class HomeViewModel: ObservableObject {
                 
                 let volume = Statistic(title: "24h Volume", value: marketData.volume)
                 let btcDominance = Statistic(title: "BTC Dominance", value: marketData.btcDominance)
-                let portfolio = Statistic(title: "Portfolio Value", value: "R$0,00", percentageChange: 0)
+                
+                let portfolioValue = portfolioCoins.map { $0.currentHoldingsValue }.reduce(0, +)
+                
+                let previousValue = portfolioCoins.map { coin -> Double in
+                    let percentChange = (coin.priceChangePercentage24H ?? 0) / 100
+                    return coin.currentHoldingsValue / (1 + percentChange)
+                }.reduce(0, +)
+                
+                let percentageChange = ((portfolioValue - previousValue) / previousValue) * 100
+                
+                let portfolio = Statistic(
+                    title: "Portfolio Value",
+                    value: portfolioValue.asNumberString(),
+                    percentageChange: percentageChange
+                )
                 
                 statistics.append(contentsOf: [marketCap, volume, btcDominance, portfolio])
             } catch {
@@ -95,6 +109,8 @@ class HomeViewModel: ObservableObject {
                 coins.append(coin.updateHoldings(amount: portfolio.amount))
             }
         }
+        
+        fetchMarketData()
         
         return coins
     }

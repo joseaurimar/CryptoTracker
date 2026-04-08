@@ -35,7 +35,7 @@ actor LocalFileManager {
         if !FileManager.default.fileExists(atPath: url.path) {
             do {
                 try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-            } catch let error {
+            } catch {
                 print("Error creating directory called: \(folderName) -> \(error)")
             }
         }
@@ -55,7 +55,7 @@ actor LocalFileManager {
         // save image to path
         do {
             try image.write(to: url)
-        } catch let error {
+        } catch {
             print("Error saving image called: \(imageName) -> \(error)")
         }
     }
