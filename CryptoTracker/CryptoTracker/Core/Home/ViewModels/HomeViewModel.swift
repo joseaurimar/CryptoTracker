@@ -11,24 +11,25 @@ import SwiftUI
 
 final class HomeViewModel: ObservableObject {
     
+    enum SortOptioin {
+        case rank, rankReversed, price, priceReversed, holdings, holdingsReversed
+    }
+    
     @Published var statistics: [Statistic] = []
     @Published var allCoins: [Coin] = []
     @Published var portfolioCoins: [Coin] = []
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
+    @Published var sortOption: SortOptioin = .holdings
     
     private let coinService = CoinDataService()
     private let service: PortfolioDataService
     
     var filteredCoins: [Coin] {
         if searchText.isEmpty {
-            return allCoins
+            return sortCoins()
         } else {
-            return allCoins.filter {
-                let lowercasedText = searchText.lowercased()
-                
-                return $0.name.lowercased().contains(lowercasedText) || $0.symbol.lowercased().contains(lowercasedText)
-            }
+            return filterAndSortCoins()
         }
     }
     
@@ -37,19 +38,16 @@ final class HomeViewModel: ObservableObject {
         
         Task {
             await fetchMarketData()
+            await getCoins()
         }
-        
-        getCoins()
     }
     
-    private func getCoins() {
-        Task {
-            do {
-                allCoins = try await coinService.getCoins()
-                portfolioCoins = await fetchPortfolioCoins()
-            } catch {
-                print(error.localizedDescription)
-            }
+    private func getCoins() async {
+        do {
+            allCoins = try await coinService.getCoins()
+            portfolioCoins = await fetchPortfolioCoins()
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -98,6 +96,50 @@ final class HomeViewModel: ObservableObject {
         
         isLoading = false
         HapticManager.notification(type: .success)
+    }
+    
+    private func filterAndSortCoins() -> [Coin] {
+        
+        let filteredList = allCoins.filter {
+            let lowercasedText = searchText.lowercased()
+            return $0.name.lowercased().contains(lowercasedText) || $0.symbol.lowercased().contains(lowercasedText)
+        }
+        
+        switch sortOption {
+        case .rank, .holdings:
+            return filteredList.sorted(by: { $0.rank < $1.rank })
+        case .rankReversed, .holdingsReversed:
+            return filteredList.sorted(by: { $0.rank > $1.rank })
+        case .price:
+            return filteredList.sorted(by: { $0.currentPrice > $1.currentPrice })
+        case .priceReversed:
+            return filteredList.sorted(by: { $0.currentPrice < $1.currentPrice })
+        }
+    }
+    
+    private func sortCoins() -> [Coin] {
+        switch sortOption {
+        case .rank, .holdings:
+            return allCoins.sorted(by: { $0.rank < $1.rank })
+        case .rankReversed, .holdingsReversed:
+            return allCoins.sorted(by: { $0.rank > $1.rank })
+        case .price:
+            return allCoins.sorted(by: { $0.currentPrice > $1.currentPrice })
+        case .priceReversed:
+            return allCoins.sorted(by: { $0.currentPrice < $1.currentPrice })
+        }
+    }
+    
+    private func sortPortfolioCoinsIfNeeded() {
+        // will only sort by holdings or reversedholdings if needed
+        switch sortOption {
+        case .holdings:
+            portfolioCoins = portfolioCoins.sorted(by: { $0.currentHoldingsValue > $1.currentHoldingsValue })
+        case .holdingsReversed:
+            portfolioCoins = portfolioCoins.sorted(by: { $0.currentHoldingsValue < $1.currentHoldingsValue })
+        default:
+            portfolioCoins = portfolioCoins
+        }
     }
     
     // MARK: SwiftData functions
