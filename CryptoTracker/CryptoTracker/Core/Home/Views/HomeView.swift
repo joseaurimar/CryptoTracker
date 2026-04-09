@@ -13,6 +13,8 @@ struct HomeView: View {
     @EnvironmentObject private var viewModel: HomeViewModel
     @State private var showPortfolio = false
     @State private var showPortfolioView = false
+    @State private var selectedCoin: Coin? = nil
+    @State private var showCoinDetailView = false
     
     var body: some View {
         ZStack {
@@ -46,6 +48,13 @@ struct HomeView: View {
                 Spacer(minLength: 0)
             }
         }
+        .background(
+            NavigationLink(
+                destination: CoinDetailLoadingView(coin: $selectedCoin),
+                isActive: $showCoinDetailView,
+                label: { EmptyView() }
+            )
+        )
     }
 }
 
@@ -83,9 +92,17 @@ extension HomeView {
             ForEach(viewModel.filteredCoins) { coin in
                 CoinRowView(coin: coin, showHoldingsColumn: false)
                     .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+                    .onTapGesture {
+                        segue(coin: coin)
+                    }
             }
         }
         .listStyle(.plain)
+    }
+    
+    private func segue(coin: Coin) {
+        selectedCoin = coin
+        showCoinDetailView.toggle()
     }
     
     private var portfolioCoinsList: some View {
@@ -94,6 +111,9 @@ extension HomeView {
                 if let portfolio = viewModel.getPortfolio(coin: coin) {
                     CoinRowView(coin: coin.updateHoldings(amount: portfolio.amount), showHoldingsColumn: true)
                             .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+                            .onTapGesture {
+                                segue(coin: coin)
+                            }
                 }
             }
         }
