@@ -22,18 +22,74 @@ struct CoinDetailLoadingView: View {
 
 struct CoinDetailView: View {
     
-    let coin: Coin
+    @StateObject private var viewModel: CoinDetailViewModel
+    //@State private var coinDetails: CoinDetail?
+    
+    private let coin: Coin
+    private let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
     init(coin: Coin) {
+        _viewModel = StateObject(wrappedValue: CoinDetailViewModel(coin: coin))
         self.coin = coin
-        print("Init: \(coin.name)")
     }
     
     var body: some View {
-        Text(coin.name)
+        ScrollView {
+            VStack(spacing: 20) {
+                Text("")
+                    .frame(height: 150)
+                
+                overviewTitle
+                Divider()
+                
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 30) {
+                    ForEach(viewModel.overviewStatistics) { statistics in
+                        StatisticView(statistic: statistics)
+                    }
+                }
+                
+                additionalTitle
+                Divider()
+                
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 30) {
+                    ForEach(viewModel.additionalStatistics) { statistics in
+                        StatisticView(statistic: statistics)
+                    }
+                }
+            }
+            .padding()
+        }
+        .navigationTitle(coin.name)
+        //.task {
+        //    coinDetails = await viewModel.getCoinDetails(with: coin.id)
+        //}
+    }
+}
+
+extension CoinDetailView {
+    
+    private var overviewTitle: some View {
+        Text("Overview")
+            .font(.title)
+            .bold()
+            .foregroundStyle(Color.theme.accent)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var additionalTitle: some View {
+        Text("Additional Details")
+            .font(.title)
+            .bold()
+            .foregroundStyle(Color.theme.accent)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
 #Preview {
-    CoinDetailView(coin: DeveloperPreview.instance.coin)
+    NavigationView {
+        CoinDetailView(coin: DeveloperPreview.instance.coin)
+    }
 }
