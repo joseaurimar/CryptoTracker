@@ -37,32 +37,42 @@ struct CoinDetailView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Text("")
-                    .frame(height: 150)
+        ScrollView(showsIndicators: false) {
+            
+            VStack {
+                ChartView(coin: coin)
+                    .padding(.vertical)
                 
-                overviewTitle
-                Divider()
-                
-                LazyVGrid(columns: columns, alignment: .leading, spacing: 30) {
-                    ForEach(viewModel.overviewStatistics) { statistics in
-                        StatisticView(statistic: statistics)
+                VStack(spacing: 20) {
+                    
+                    overviewTitle
+                    Divider()
+                    
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 30) {
+                        ForEach(viewModel.overviewStatistics) { statistics in
+                            StatisticView(statistic: statistics)
+                        }
+                    }
+                    
+                    additionalTitle
+                    Divider()
+                    
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 30) {
+                        ForEach(viewModel.additionalStatistics) { statistics in
+                            StatisticView(statistic: statistics)
+                        }
                     }
                 }
-                
-                additionalTitle
-                Divider()
-                
-                LazyVGrid(columns: columns, alignment: .leading, spacing: 30) {
-                    ForEach(viewModel.additionalStatistics) { statistics in
-                        StatisticView(statistic: statistics)
-                    }
-                }
+                .padding()
             }
-            .padding()
         }
         .navigationTitle(coin.name)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                navigationBarTrailingItems
+            }
+            .sharedBackgroundVisibility(.hidden)
+        }
         //.task {
         //    coinDetails = await viewModel.getCoinDetails(with: coin.id)
         //}
@@ -85,6 +95,16 @@ extension CoinDetailView {
             .bold()
             .foregroundStyle(Color.theme.accent)
             .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var navigationBarTrailingItems: some View {
+        HStack {
+            Text(coin.symbol.uppercased())
+                .font(.headline)
+                .foregroundStyle(Color.theme.secondaryText)
+            CoinImageView(coin: coin)
+                .frame(width: 25, height: 25)
+        }
     }
 }
 
