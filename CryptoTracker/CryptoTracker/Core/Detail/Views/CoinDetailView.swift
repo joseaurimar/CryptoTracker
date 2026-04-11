@@ -23,7 +23,7 @@ struct CoinDetailLoadingView: View {
 struct CoinDetailView: View {
     
     @StateObject private var viewModel: CoinDetailViewModel
-    //@State private var coinDetails: CoinDetail?
+    @State private var showFullDescription = false
     
     private let coin: Coin
     private let columns: [GridItem] = [
@@ -48,6 +48,8 @@ struct CoinDetailView: View {
                     overviewTitle
                     Divider()
                     
+                    description
+                    
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 30) {
                         ForEach(viewModel.overviewStatistics) { statistics in
                             StatisticView(statistic: statistics)
@@ -62,6 +64,8 @@ struct CoinDetailView: View {
                             StatisticView(statistic: statistics)
                         }
                     }
+                    
+                    links
                 }
                 .padding()
             }
@@ -105,6 +109,49 @@ extension CoinDetailView {
             CoinImageView(coin: coin)
                 .frame(width: 25, height: 25)
         }
+    }
+    
+    private var description: some View {
+        ZStack {
+            if let description = viewModel.coinDescription, !description.isEmpty {
+                VStack(alignment: .leading) {
+                    Text(description)
+                        .font(.callout)
+                        .foregroundStyle(Color.theme.secondaryText)
+                        .lineLimit(showFullDescription ? nil : 3)
+                    
+                    Button {
+                        withAnimation(.easeInOut) {
+                            showFullDescription.toggle()
+                        }
+                    } label: {
+                        Text(showFullDescription ? "Less" : "Read more...")
+                            .font(.caption)
+                            .foregroundStyle(Color.blue)
+                            .bold()
+                            .padding(.vertical, 4)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+    }
+    
+    private var links: some View {
+        HStack {
+            if let websiteURLString = viewModel.websiteURL, let url = URL(string: websiteURLString) {
+                Link("Website", destination: url)
+            }
+            
+            Spacer()
+            
+            if let redditURLString = viewModel.redditURL, let url = URL(string: redditURLString) {
+                Link("Reddit", destination: url)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .font(.headline)
+        .foregroundStyle(Color.blue)
     }
 }
 

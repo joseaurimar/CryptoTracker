@@ -12,6 +12,9 @@ final class CoinDetailViewModel: ObservableObject {
     
     @Published var overviewStatistics: [Statistic] = []
     @Published var additionalStatistics: [Statistic] = []
+    @Published var coinDescription: String? = nil
+    @Published var websiteURL: String? = nil
+    @Published var redditURL: String? = nil
     
     private let coinDetailDataService = CoinDetailDataService()
     private let coin: Coin
@@ -29,6 +32,9 @@ final class CoinDetailViewModel: ObservableObject {
         do {
             let details = try await coinDetailDataService.getCoinDetails(with: coin.id)
             await makeAdditionalStatistics(coinDetail: details)
+            coinDescription = details.readableDescription
+            websiteURL = details.links?.homepage?.first
+            redditURL = details.links?.subredditURL
         } catch {
             print(error.localizedDescription)
         }
