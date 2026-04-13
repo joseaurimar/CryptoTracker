@@ -29,6 +29,8 @@ struct CryptoTrackerApp: App {
                 HomeView()
                     .navigationBarHidden(true)
             }
+            // Added this style to iPad layout looks like iPhones layout
+            .navigationViewStyle(StackNavigationViewStyle())
             .environmentObject(viewModel)
         }
     }
