@@ -70,6 +70,10 @@ struct CoinDetailView: View {
                 .padding()
             }
         }
+        .background(
+            Color.theme.background
+                .ignoresSafeArea()
+        )
         .navigationTitle(coin.name)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -77,9 +81,6 @@ struct CoinDetailView: View {
             }
             .sharedBackgroundVisibility(.hidden)
         }
-        //.task {
-        //    coinDetails = await viewModel.getCoinDetails(with: coin.id)
-        //}
     }
 }
 

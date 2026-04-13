@@ -15,9 +15,18 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                coingeckoSection
-                applicationSection
+            ZStack {
+                // background
+                Color.theme.background
+                    .ignoresSafeArea()
+                
+                // content
+                List {
+                    coingeckoSection
+                        .listRowBackground(Color.theme.background.opacity(0.5))
+                    applicationSection
+                        .listRowBackground(Color.theme.background.opacity(0.5))
+                }
             }
             .listStyle(GroupedListStyle())
             .navigationTitle("Settings")
