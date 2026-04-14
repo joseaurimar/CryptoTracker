@@ -67,10 +67,10 @@ extension SettingsView {
     }
     
     private var applicationSection: some View {
-        Section(header: Text("Application")) {
-            Link("Terms of Service", destination: coingeckoURL)
+        Section(header: Text("application")) {
+            Link("terms_of_service", destination: coingeckoURL)
                 .foregroundStyle(Color.blue)
-            Link("Privacy Police", destination: coingeckoURL)
+            Link("privacy_police", destination: coingeckoURL)
                 .foregroundStyle(Color.blue)
         }
     }

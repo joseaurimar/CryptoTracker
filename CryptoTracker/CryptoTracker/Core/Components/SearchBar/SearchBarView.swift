@@ -16,7 +16,7 @@ struct SearchBarView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(searchText.isEmpty ? Color.theme.secondaryText : Color.theme.accent)
             
-            TextField("Search by name or symbol...", text: $searchText)
+            TextField("search_field_placedolder", text: $searchText)
                 .foregroundStyle(Color.theme.accent)
                 .disableAutocorrection(true)
                 .overlay(Image(systemName: "xmark.circle.fill")

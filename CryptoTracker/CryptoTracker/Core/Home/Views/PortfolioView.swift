@@ -39,7 +39,7 @@ struct PortfolioView: View {
                 Color.theme.background
                     .ignoresSafeArea()
             )
-            .navigationTitle("Edit Portfolio")
+            .navigationTitle("edit_portfolio_title")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(
@@ -110,13 +110,13 @@ extension PortfolioView {
             HStack {
                 Text("Amount holding:")
                 Spacer()
-                TextField("Ex: 1,4", text: $quantityText)
+                TextField("amount_holding_text_field_placeholder", text: $quantityText)
                     .multilineTextAlignment(.trailing)
                     .keyboardType(.decimalPad)
             }
             Divider()
             HStack {
-                Text("Current value:")
+                Text("current_value:")
                 Spacer()
                 Text(getCurrentValue().asCurrencyWith2Decimals())
             }
@@ -132,7 +132,7 @@ extension PortfolioView {
             Button {
                 saveButtonPressed()
             } label: {
-                Text("SAVE")
+                Text("save")
             }
             .opacity(selectedCoin != nil && selectedCoin?.currentHoldings != Double(quantityText.replacingOccurrences(of: ",", with: ".")) ? 1.0 : 0.0)
         }

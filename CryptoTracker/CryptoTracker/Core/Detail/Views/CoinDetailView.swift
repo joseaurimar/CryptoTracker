@@ -95,7 +95,7 @@ extension CoinDetailView {
     }
     
     private var additionalTitle: some View {
-        Text("Additional Details")
+        Text("additional_details")
             .font(.title)
             .bold()
             .foregroundStyle(Color.theme.accent)
@@ -126,7 +126,7 @@ extension CoinDetailView {
                             showFullDescription.toggle()
                         }
                     } label: {
-                        Text(showFullDescription ? "Less" : "Read more...")
+                        Text(showFullDescription ? "less" : "Read more...")
                             .font(.caption)
                             .foregroundStyle(Color.blue)
                             .bold()

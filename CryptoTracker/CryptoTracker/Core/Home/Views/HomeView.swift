@@ -146,7 +146,7 @@ extension HomeView {
     private var headerCoinList: some View {
         HStack {
             HStack(spacing: 4) {
-                Text("Coin")
+                Text("coin")
                 Image(systemName: "chevron.down")
                     .opacity((viewModel.sortOption == .rank || viewModel.sortOption == .rankReversed) ? 1.0 : 0.0)
                     .rotationEffect(Angle(degrees: viewModel.sortOption == .rank ? 0 : 180))
@@ -175,7 +175,7 @@ extension HomeView {
             }
             
             HStack(spacing: 4) {
-                Text("Price")
+                Text("price")
                 Image(systemName: "chevron.down")
                     .opacity((viewModel.sortOption == .price || viewModel.sortOption == .priceReversed) ? 1.0 : 0.0)
                     .rotationEffect(Angle(degrees: viewModel.sortOption == .price ? 0 : 180))
