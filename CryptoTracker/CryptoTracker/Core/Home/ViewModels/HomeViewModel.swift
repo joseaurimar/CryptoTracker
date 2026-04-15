@@ -23,7 +23,7 @@ final class HomeViewModel: ObservableObject {
     @Published var sortOption: SortOptioin = .holdings
     
     private let coinService = CoinDataService()
-    private let service: PortfolioDataService
+    private let portfolioService: PortfolioDataService
     
     var filteredCoins: [Coin] {
         if searchText.isEmpty {
@@ -33,8 +33,8 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    init(with service: PortfolioDataService) {
-        self.service = service
+    init(with portfolioService: PortfolioDataService) {
+        self.portfolioService = portfolioService
         
         Task {
             await fetchMarketData()
@@ -145,7 +145,7 @@ final class HomeViewModel: ObservableObject {
     // MARK: SwiftData functions
     private func add(coin: Coin, amount: Double) {
         Task { @MainActor in
-            service.insert(Portfolio(coinID: coin.id, amount: amount))
+            portfolioService.insert(Portfolio(coinID: coin.id, amount: amount))
             portfolioCoins = await fetchPortfolioCoins()
         }
     }
@@ -153,14 +153,14 @@ final class HomeViewModel: ObservableObject {
     // Delete portfolio
     private func delete(_ portfolio: Portfolio) {
         Task { @MainActor in
-            service.delete(portfolio)
+            portfolioService.delete(portfolio)
             portfolioCoins = await fetchPortfolioCoins()
         }
     }
     
     @MainActor
     private func fetchPortfolioCoins() async -> [Coin] {
-        let portfolioCoins = service.fetchPortfolioCoins()
+        let portfolioCoins = portfolioService.fetchPortfolioCoins()
         var coins: [Coin] = []
         
         portfolioCoins.forEach { portfolio in
@@ -177,7 +177,7 @@ final class HomeViewModel: ObservableObject {
     // First check if portfolio was added in data base if not add a new coin to portfolio.
     // If the selected coin is in data base check if the amount value is greater than zero to update the amount and if the amount is zero remove portfolio from data base.
     func updatePortfolio(coin: Coin, amount: Double) {
-        if let portfolio = service.fetchPortfolioCoins().first(where: { $0.coinID == coin.id }) {
+        if let portfolio = portfolioService.fetchPortfolioCoins().first(where: { $0.coinID == coin.id }) {
             if amount > 0 {
                 portfolio.amount = amount
             } else {
@@ -189,6 +189,6 @@ final class HomeViewModel: ObservableObject {
     }
     
     func getPortfolio(coin: Coin) -> Portfolio? {
-        return service.fetchPortfolioCoins().first(where: { $0.coinID == coin.id })
+        return portfolioService.fetchPortfolioCoins().first(where: { $0.coinID == coin.id })
     }
 }

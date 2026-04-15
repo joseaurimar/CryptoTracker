@@ -7,7 +7,11 @@
 
 import Foundation
 
-actor CoinDetailDataService {
+protocol CoinDetailDataServiceProtocol {
+    func getCoinDetails(with id: String) async throws -> CoinDetail
+}
+
+actor CoinDetailDataService: CoinDetailDataServiceProtocol {
     
     @MainActor
     func getCoinDetails(with id: String) async throws -> CoinDetail {

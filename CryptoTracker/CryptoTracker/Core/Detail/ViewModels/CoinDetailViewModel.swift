@@ -16,11 +16,12 @@ final class CoinDetailViewModel: ObservableObject {
     @Published var websiteURL: String? = nil
     @Published var redditURL: String? = nil
     
-    private let coinDetailDataService = CoinDetailDataService()
+    private let coinDetailDataService: CoinDetailDataServiceProtocol
     private let coin: Coin
     
-    init(coin: Coin) {
+    init(coin: Coin, service: CoinDetailDataServiceProtocol = CoinDetailDataService()) {
         self.coin = coin
+        coinDetailDataService = service
         makeOverviewStatistics()
         
         Task {
