@@ -22,7 +22,7 @@ final class HomeViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var sortOption: SortOptioin = .holdings
     
-    private let coinService = CoinDataService()
+    private let coinService: CoinDataServiceProtocol
     private let portfolioService: PortfolioDataService
     
     var filteredCoins: [Coin] {
@@ -33,8 +33,9 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    init(with portfolioService: PortfolioDataService) {
+    init(with portfolioService: PortfolioDataService, coinService: CoinDataServiceProtocol = CoinDataService()) {
         self.portfolioService = portfolioService
+        self.coinService = coinService
         
         Task {
             await fetchMarketData()

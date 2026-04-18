@@ -8,7 +8,12 @@
 import Foundation
 import SwiftUI
 
-actor CoinDataService {
+protocol CoinDataServiceProtocol {
+    func getCoins() async throws -> [Coin]
+    func getMarketData() async throws -> MarketData
+}
+
+actor CoinDataService: CoinDataServiceProtocol {
     
     init() {}
     
