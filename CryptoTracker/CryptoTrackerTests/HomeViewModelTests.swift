@@ -36,20 +36,19 @@ final class HomeViewModelTests: XCTestCase {
     @MainActor
     func testGetCoinsWithSuccess() async {
         
-        // Start listening to updates asynchronously
-        let itemsTask = Task {
-            // .values converts the publisher to an AsyncSequence
-            // .dropFirst() ignores the initial empty array
-            for await items in viewModel.$allCoins.dropFirst().values {
-                return items
-            }
-            return []
-        }
+        // 1. Capture the stream of values
+        // Use .dropFirst() if you want to ignore the initial empty state
+        let values = viewModel.$allCoins.dropFirst().values
         
-        // Await the result from our task and assert
-        let coins = await itemsTask.value
-        XCTAssertEqual(coins.count, 1)
-        XCTAssertEqual(coins.first?.name, "Bitcoin")
+        // 2. Trigger the async work
+        // In my case the trigger was done in init
+        // await viewModel.fetchData()
+        
+        // 3. Await the first emission from the sequence
+        let updatedList = await values.first { _ in true }
+        
+        XCTAssertEqual(updatedList?.count, 1)
+        XCTAssertEqual(updatedList?.first?.name, "Bitcoin")
     }
     
     func testPortfolioListShouldBeEmptyOnInit() {
