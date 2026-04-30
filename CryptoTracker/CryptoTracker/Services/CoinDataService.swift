@@ -11,6 +11,7 @@ import SwiftUI
 protocol CoinDataServiceProtocol {
     func getCoins() async throws -> [Coin]
     func getMarketData() async throws -> MarketData
+    func downloadCoinImage(with url: String) async throws -> UIImage?
 }
 
 actor CoinDataService: CoinDataServiceProtocol {

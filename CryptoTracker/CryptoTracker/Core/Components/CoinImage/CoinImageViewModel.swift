@@ -14,13 +14,18 @@ final class CoinImageViewModel: ObservableObject {
     @Published var isLoading = false
     
     private let coin: Coin
-    private let coinDataService = CoinDataService()
-    private let fileManager = LocalFileManager.instance
+    private let coinDataService: CoinDataServiceProtocol
+    private let fileManager: LocalFileManagerProtocol
     private let folderName = "coin_images"
     private let imageName: String
     
-    init(coin: Coin) {
+    init(coin: Coin,
+         coinDataService: CoinDataServiceProtocol = CoinDataService(),
+         fileManager: LocalFileManagerProtocol = LocalFileManager.instance) {
+        
         self.coin = coin
+        self.coinDataService = coinDataService
+        self.fileManager = fileManager
         isLoading = true
         imageName = coin.id
         getImage(imageURL: coin.image)
@@ -32,10 +37,14 @@ final class CoinImageViewModel: ObservableObject {
             if let localImage = await fileManager.getImage(with: imageName, in: folderName) {
                 image = localImage
             } else {
-                image = try await coinDataService.downloadCoinImage(with: imageURL)
-                
-                if let downloadedImage = image {
-                    await fileManager.saveImage(image: downloadedImage, imageName: imageName, folderName: folderName)
+                do {
+                    image = try await coinDataService.downloadCoinImage(with: imageURL)
+                    
+                    if let downloadedImage = image {
+                        await fileManager.saveImage(image: downloadedImage, imageName: imageName, folderName: folderName)
+                    }
+                } catch {
+                    // Error handled silently - image remains nil
                 }
             }
             

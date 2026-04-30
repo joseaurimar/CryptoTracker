@@ -7,7 +7,12 @@
 
 import SwiftUI
 
-actor LocalFileManager {
+protocol LocalFileManagerProtocol: Actor {
+    func saveImage(image: UIImage, imageName: String, folderName: String)
+    func getImage(with name: String, in folderName: String) -> UIImage?
+}
+
+actor LocalFileManager: LocalFileManagerProtocol {
     
     static let instance = LocalFileManager()
     

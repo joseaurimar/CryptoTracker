@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 @testable import CryptoTracker
 
 actor MockCoinDataService: CoinDataServiceProtocol {
@@ -33,5 +34,22 @@ actor MockCoinDataService: CoinDataServiceProtocol {
                           totalVolume: [:],
                           marketCapPercentage: [:],
                           marketCapChangePercentage24HUsd: 0.0)
+    }
+    
+    func downloadCoinImage(with url: String) async throws -> UIImage? {
+        if shouldThrowError {
+            throw errorToThrow
+        }
+        
+        // Return a small test image (1x1 red pixel)
+        let size = CGSize(width: 1, height: 1)
+        UIGraphicsBeginImageContext(size)
+        let context = UIGraphicsGetCurrentContext()
+        context?.setFillColor(UIColor.red.cgColor)
+        context?.fill(CGRect(origin: .zero, size: size))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image
     }
 }
